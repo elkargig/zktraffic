@@ -28,6 +28,7 @@ from zktraffic.stats.accumulators import (
 from .endpoints_server import EndpointsServer
 
 from twitter.common.http import HttpServer
+import json
 
 
 class StatsServer(EndpointsServer):
@@ -80,12 +81,23 @@ class StatsServer(EndpointsServer):
   def _get_stats(self, name, prefix=''):
     stats_by_opname = self._stats.stats(name, self._max_results)
 
-    stats = {}
+    output_array=True
+    if output_array:
+        stats_me = []
+    else:
+        stats = {}
     for opname, opstats in stats_by_opname.items():
       for path, value in opstats.items():
-        stats["%s%s%s" % (prefix, opname, path)] = value
-
-    return stats
+        if output_array:
+            tmp_dict={"opname": opname, "path": "%s%s" % (prefix, path), "value":value}
+            stats_me.append(tmp_dict)
+        else:
+            stats["%s%s%s" % (prefix, opname, path)] = value
+    if output_array:
+        stats_json=json.dumps(stats_me)
+        return stats_json
+    else:
+        return stats
 
   @HttpServer.route("/json/paths")
   def json_paths(self):
