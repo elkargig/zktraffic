@@ -83,7 +83,7 @@ class StatsServer(EndpointsServer):
     stats_by_opname = self._stats.stats(name, self._max_results)
 
     if output_array:
-        stats_me = []
+        stats_arr = []
     else:
         stats = {}
     for opname, opstats in stats_by_opname.items():
@@ -94,11 +94,11 @@ class StatsServer(EndpointsServer):
             if prefix.endswith('/'):
                 prefix=prefix[:-1]
             tmp_dict={"opname": opname, "path": "%s%s" % (prefix, path), "value":value}
-            stats_me.append(tmp_dict)
+            stats_arr.append(tmp_dict)
         else:
             stats["%s%s%s" % (prefix, opname, path)] = value
     if output_array:
-        stats_json=json.dumps(stats_me)
+        stats_json=json.dumps(stats_arr)
         return stats_json
     else:
         return stats
