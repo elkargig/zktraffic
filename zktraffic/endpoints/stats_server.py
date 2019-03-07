@@ -82,6 +82,8 @@ class StatsServer(EndpointsServer):
   def _get_stats(self, name, prefix='', output_array=False):
     stats_by_opname = self._stats.stats(name, self._max_results)
 
+    # Temporary hack to overcome GET parameter limitation
+    output_array=True
     if output_array:
         stats_arr = []
     else:
