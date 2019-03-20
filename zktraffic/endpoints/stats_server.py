@@ -105,24 +105,21 @@ class StatsServer(EndpointsServer):
         return stats
 
   @HttpServer.route("/json/paths")
-  def json_paths(self, array_output=False):
+  def json_paths(self):
     array_get = HttpServer.request.GET.get("array_out")
-    if array_get and array_get.lower() in ['true', '1', 't', 'y', 'yes']:
-        array_output = True
-    return self._get_stats('per_path','',array_output)
+    array_output = array_get and array_get.lower() in ['true', '1', 't', 'y', 'yes']
+    return self._get_stats('per_path', '', array_output)
 
   @HttpServer.route("/json/ips")
-  def json_ips(self, array_output=False):
+  def json_ips(self):
     array_get = HttpServer.request.GET.get("array_out")
-    if array_get and array_get.lower() in ['true', '1', 't', 'y', 'yes']:
-        array_output = True
+    array_output = array_get and array_get.lower() in ['true', '1', 't', 'y', 'yes']
     return self._get_stats('per_ip', 'per_ip/', array_output)
 
   @HttpServer.route("/json/auths")
-  def json_auths(self, array_output=False):
+  def json_auths(self):
     array_get = HttpServer.request.GET.get("array_out")
-    if array_get and array_get.lower() in ['true', '1', 't', 'y', 'yes']:
-        array_output = True
+    array_output = array_get and array_get.lower() in ['true', '1', 't', 'y', 'yes']
     return self._get_stats('per_auth', 'per_auth/', array_output)
 
   @HttpServer.route("/json/auths-dump")
