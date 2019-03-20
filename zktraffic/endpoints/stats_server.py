@@ -28,7 +28,7 @@ from zktraffic.stats.accumulators import (
 from .endpoints_server import EndpointsServer
 
 from twitter.common.http import HttpServer
-from twitter.common.http.server import request
+from twitter.common.http.server import request,response
 import json
 
 
@@ -84,6 +84,7 @@ class StatsServer(EndpointsServer):
 
     if output_array:
         stats_arr = []
+        response.content_type = 'application/json'
     else:
         stats = {}
     for opname, opstats in stats_by_opname.items():
