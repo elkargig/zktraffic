@@ -82,8 +82,6 @@ class StatsServer(EndpointsServer):
   def _get_stats(self, name, prefix='', output_array=False):
     stats_by_opname = self._stats.stats(name, self._max_results)
 
-    # Temporary hack to overcome GET parameter limitation
-    output_array=True
     if output_array:
         stats_arr = []
     else:
@@ -94,39 +92,40 @@ class StatsServer(EndpointsServer):
             #TODO: split prefix to each own key
             #TODO: when per_ip: split path by ':' and add IPs to their own key
             if prefix.endswith('/'):
-                prefix=prefix[:-1]
-            tmp_dict={"opname": opname, "path": "%s%s" % (prefix, path), "value":value}
+                prefix = prefix[:-1]
+            tmp_dict = {"opname": opname, "path": "%s%s" % (prefix, path), "value":value}
             stats_arr.append(tmp_dict)
         else:
             stats["%s%s%s" % (prefix, opname, path)] = value
     if output_array:
-        stats_json=json.dumps(stats_arr)
+        stats_json = json.dumps(stats_arr)
         return stats_json
     else:
         return stats
+
   @HttpServer.route("/json/paths")
   def json_paths(self, array_output=False):
     array_get = HttpServer.request.GET.get("array_out")
     if array_get and array_get.lower() in ['true', '1', 't', 'y', 'yes']:
-        array_output=True
+        array_output = True
     return self._get_stats('per_path','',array_output)
 
   @HttpServer.route("/json/ips")
   def json_ips(self, array_output=False):
     array_get = HttpServer.request.GET.get("array_out")
     if array_get and array_get.lower() in ['true', '1', 't', 'y', 'yes']:
-        array_output=True
+        array_output = True
     return self._get_stats('per_ip', 'per_ip/', array_output)
 
   @HttpServer.route("/json/auths")
   def json_auths(self, array_output=False):
     array_get = HttpServer.request.GET.get("array_out")
     if array_get and array_get.lower() in ['true', '1', 't', 'y', 'yes']:
-        array_output=True
+        array_output = True
     return self._get_stats('per_auth', 'per_auth/', array_output)
 
   @HttpServer.route("/json/auths-dump")
-  def json_auths_dump(self, array_output=False):
+  def json_auths_dump(self):
     return self._stats.auth_by_client
 
   @HttpServer.route("/json/info")
